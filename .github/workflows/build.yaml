@@ -29,7 +29,16 @@ jobs:
           maturin-version: latest
           command: build
           manylinux: auto
-          args: --release --sdist -i 3.9 3.10 3.11 3.12 3.13 3.13t 3.14 3.14t 3.15
+          args: --release --sdist -i 3.9 3.10 3.11 3.12 3.13 3.14 3.14t 3.15
+      # Current manylinux images and Maturin no longer support 3.13t.
+      - uses: PyO3/maturin-action@e10f6c464b90acceb5f640d31beda6d586ba7b4a
+        with:
+          target: ${{ matrix.target }}
+          container: quay.io/pypa/manylinux2014_${{ matrix.target }}:2026.05.02-2
+          maturin-version: "1.12.6"
+          command: build
+          manylinux: auto
+          args: --release -i 3.13t
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: linux-wheels-${{ matrix.target }}
